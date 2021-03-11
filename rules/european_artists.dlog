@@ -1,0 +1,6 @@
+[?artist, a, lux:EuropeanArtist] :- 
+  [?artist, a, crm:E21_Person], 
+  [?artist, la:equivalent, ?equiv], 
+  lux:vocabs(?equiv, lux:birthPlace, ?place), 
+  lux:vocabs(?place, getty:broaderPartitive, ?broaderPlace), 
+  FILTER(?broaderPlace = <http://vocab.getty.edu/tgn/1000003>) .

@@ -1,0 +1,8 @@
+[?birthPlace, lux:prefLabel, ?term] :- 
+  [?artist, lux:birthPlace, ?birthPlace], 
+  [?artist, a, crm:E21_Person], 
+  [?artist, la:equivalent, ?equiv], 
+  lux:vocabs(?equiv, lux:birthPlace, ?birthPlace), 
+  lux:vocabs(?birthPlace, skosxl:prefLabel, ?xl), 
+  lux:vocabs(?xl, getty:term, ?term), 
+  lux:vocabs(?xl, dct:language, <http://vocab.getty.edu/language/en>) .

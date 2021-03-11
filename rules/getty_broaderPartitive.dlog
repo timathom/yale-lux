@@ -1,0 +1,3 @@
+lux:vocabs(?x, getty:broaderPartitive, ?z) :- 
+  lux:vocabs(?x, getty:broaderPartitive, ?y), 
+  lux:vocabs(?y, getty:broaderPartitive, ?z) .
