@@ -1,0 +1,14 @@
+[?books_by, rdf:type, lux:BookList], 
+[?books_by, lux:hasWriter, ?writer], 
+[?books_by, lux:hasBook, ?book], :- 
+  [?book, crm:P94i_was_created_by, ?creation], 
+  [?book, crm:P2_has_type, <http://vocab.getty.edu/aat/300028051>], 
+  [?creation, crm:P9_consists_of, ?creationPart], 
+  [?creationPart, crm:P2_has_type, <http://vocab.getty.edu/aat/300025492>], 
+  [?creationPart, crm:P14_carried_out_by, ?writer], 
+  rdfox:SKOLEM("BookList", ?writer, ?books_by) .
+  
+[?books_by, lux:bookCount, ?bookCount] :-
+ AGGREGATE(
+ [?books_by, lux:hasBook, ?book]
+ ON ?books_by BIND COUNT(?book) AS ?bookCount) .

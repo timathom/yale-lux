@@ -1,0 +1,23 @@
+prefix lux: <http://lux.yale.edu/resource/>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select distinct ?someone ?other ?text where { 
+  ?object crm:P108i_was_produced_by [
+    crm:P9_consists_of [ crm:P14_carried_out_by ?someone ; crm:P2_has_type <http://vocab.getty.edu/aat/300025103> ] # AAT artist
+  ] .
+  
+  ?otherObject crm:P108i_was_produced_by [
+    crm:P9_consists_of [ crm:P14_carried_out_by ?other ; crm:P2_has_type <http://vocab.getty.edu/aat/300025103> ] 
+  ] .
+  
+  ?text crm:P94i_was_created_by [ 
+    crm:P9_consists_of [ crm:P14_carried_out_by ?someone ; crm:P2_has_type <http://vocab.getty.edu/aat/300025492> ] , # AAT author 
+    [ crm:P14_carried_out_by ?other ; crm:P2_has_type <http://vocab.getty.edu/aat/300025492> ] 
+  ] ; crm:P2_has_type <http://vocab.getty.edu/aat/300028051> .
+  
+  #?someone crm:P1_is_identified_by [ crm:P190_has_symbolic_content ?name ] .
+  #?other crm:P1_is_identified_by [ crm:P190_has_symbolic_content ?otherName ] .
+  
+  filter(!sameTerm(?someone, ?other))
+}

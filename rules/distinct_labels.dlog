@@ -1,0 +1,5 @@
+[?entity, lux:label, ?label] :- 
+  AGGREGATE( 
+    [?entity, crm:P1_is_identified_by, ?bnode], 
+    [?bnode, crm:P190_has_symbolic_content, ?name] 
+    ON ?entity BIND MAX(?name) AS ?label ) .

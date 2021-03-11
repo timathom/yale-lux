@@ -1,0 +1,17 @@
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix lux: <http://lux.yale.edu/resource/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?title ?type ?typeLabel (count(distinct ?resource) as ?count) where {
+  ?resource crm:P65_shows_visual_item [
+    crm:P129_is_about [
+      crm:P94i_was_created_by [
+        crm:P15_was_influenced_by <urn:uuid:21b9f29b-f19d-4bde-8590-01e1fc382005>, ?pictorial
+      ]
+    ]
+  ] ; crm:P1_is_identified_by [crm:P190_has_symbolic_content ?title ; crm:P2_has_type <http://vocab.getty.edu/aat/300404670>] ;
+      crm:P2_has_type ?type .
+  ?pictorial a crm:E55_Type ; crm:P1_is_identified_by [crm:P190_has_symbolic_content ?label] .
+  ?type rdfs:label ?typeLabel .
+  filter(strstarts(lcase(?label), "pictorial"))
+} group by ?type order by desc(?count)

@@ -1,0 +1,13 @@
+[?painting, a, lux:19thCenturyPainting] :- 
+  [?painting, crm:P2_has_type, <http://vocab.getty.edu/aat/300033618>], 
+  [?painting, crm:P108i_was_produced_by, ?production], 
+  [?production, crm:P4_has_time-span, ?timespan], 
+  [?timespan, crm:P82a_begin_of_the_begin, ?begin], 
+  [?timespan, crm:P82b_end_of_the_end, ?end], 
+  FILTER(xsd:dateTime(?begin) >= "1800-01-01T00:00:00Z"^^xsd:dateTime && xsd:dateTime(?end) < "1900-01-01T00:00:00Z"^^xsd:dateTime) .
+
+[?painting, a, lux:19thCenturyPainting] :-
+  [?painting, crm:P2_has_type, <http://vocab.getty.edu/aat/300033618>],
+  [?painting, crm:P108i_was_produced_by, ?production],
+  [?painting, crm:P65_shows_visual_item, ?about],
+  [?about, crm:P129_is_about, <urn:uuid:48db9eba-1892-4a88-bea4-bea32a0e1d3a>] . # URN for 19th century 

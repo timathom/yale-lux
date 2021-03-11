@@ -1,0 +1,14 @@
+prefix lux: <http://lux.yale.edu/resource/>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sci: <http://www.ics.forth.gr/isl/CRMsci/>
+
+select ?collector ?place (sample(?resource) as ?exampleResource) (count(?resource) as ?resourceCount) where {
+    
+  ?resource sci:O19i_was_object_found_by ?encounter ; 
+            crm:P65_shows_visual_item [crm:P129_is_about <urn:uuid:d3594d5c-c159-40f3-b4d4-6507aafa5344>] ; # Dinosaurs
+            crm:P2_has_type <http://vocab.getty.edu/aat/300247919> . # Fossils
+  ?encounter crm:P7_took_place_at ?place ; 
+             crm:P14_carried_out_by ?collector .
+     
+} group by ?place order by desc(?resourceCount)

@@ -1,0 +1,45 @@
+prefix lux: <http://lux.yale.edu/resource/>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix schema: <http://schema.org/>
+prefix sci: <http://www.ics.forth.gr/isl/CRMsci/>
+prefix la: <https://linked.art/ns/terms/>
+prefix getty: <http://vocab.getty.edu/ontology#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix skosxl: <http://www.w3.org/2008/05/skos-xl#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select distinct ?painting where {
+  
+  ?painting crm:P2_has_type <http://vocab.getty.edu/aat/300033618> ; # paintings
+            crm:P65_shows_visual_item [crm:P129_is_about ?place] ; 
+            crm:P108i_was_produced_by [crm:P9_consists_of [crm:P14_carried_out_by ?artist ; 
+                                                           crm:P2_has_type <http://vocab.getty.edu/aat/300025103> ] ; # artists
+                                       crm:P4_has_time-span ?timespan] .
+  ?timespan crm:P82a_begin_of_the_begin ?begin ; crm:P82b_end_of_the_end ?end .
+  ?artist a crm:E21_Person ; la:equivalent ?equivPerson .
+  ?place a crm:E53_Place ; la:equivalent ?equivPlace .
+
+  # Limit to 19th century
+  filter(
+    exists { ?painting crm:P65_shows_visual_item [crm:P129_is_about <urn:uuid:48db9eba-1892-4a88-bea4-bea32a0e1d3a>] } # 19th century
+    || (xsd:dateTime(?begin) >= "1800-01-01T00:00:00Z"^^xsd:dateTime && xsd:dateTime(?end) < "1900-01-01T00:00:00Z"^^xsd:dateTime)
+  )
+  
+  # Fix TGN "page" URIs and recreate the entity URI.
+  filter(strstarts(str(?equivPlace), "http://vocab.getty.edu"))  
+  bind(iri(concat("http://vocab.getty.edu/tgn/", strafter(str(?equivPlace), "tgn/"))) as ?tgn)
+  
+  # Getty vocabs in separate named graph.
+  graph lux:vocabs {
+    ?equivPerson foaf:focus [getty:biographyPreferred ?bio] .
+    ?bio schema:birthPlace ?birthPlace .                                                       
+    ?realPlace foaf:focus ?birthPlace ; getty:broaderPartitive ?broaderBirthPlace .
+    filter(?broaderBirthPlace = <http://vocab.getty.edu/tgn/1000003>) # Europe   	
+    ?tgn getty:broaderPartitive ?broaderDepictedPlace .
+    filter(?broaderDepictedPlace = <http://vocab.getty.edu/tgn/7012149>) # United States
+  }
+  
+}

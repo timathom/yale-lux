@@ -1,0 +1,24 @@
+prefix lux: <http://lux.yale.edu/resource/>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select (sample(?name) as ?artistName) (count(distinct ?artwork) as ?workCount) where {
+
+  ?artwork crm:P108i_was_produced_by ?production ; crm:P2_has_type ?workType .
+  ?production crm:P9_consists_of ?productionPart .
+  ?productionPart crm:P14_carried_out_by ?artist ; crm:P2_has_type ?productionType .
+  
+  ?artist crm:P1_is_identified_by ?label .
+  ?label crm:P190_has_symbolic_content ?name .
+  
+  filter(?productionType in (<http://vocab.getty.edu/aat/300025103>, 
+                             <http://vocab.getty.edu/aat/300386174>))
+  filter(?workType in (<http://vocab.getty.edu/aat/300033963>, 
+                       <http://vocab.getty.edu/aat/300047896>, 
+                       <http://vocab.getty.edu/aat/300046300>, 
+                       <http://vocab.getty.edu/aat/300033973>, 
+                       <http://vocab.getty.edu/aat/300033618>, 
+                       <http://vocab.getty.edu/aat/300047090>, 
+                       <http://vocab.getty.edu/aat/300041273>))	
+  
+} group by ?artist order by desc(?workCount)

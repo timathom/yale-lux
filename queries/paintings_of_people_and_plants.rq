@@ -1,0 +1,12 @@
+prefix lux: <http://lux.yale.edu/resource/>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix sci: <http://www.ics.forth.gr/isl/CRMsci/>
+
+select ?person ?painting (count(?person) as ?count) where {
+  ?painting crm:P2_has_type <http://vocab.getty.edu/aat/300033618> ; crm:P65_shows_visual_item [crm:P129_is_about ?person , ?plant] . # painting
+  ?person a crm:E21_Person .
+  filter(
+    ?plant in (<urn:uuid:6f1d1351-6ca3-4147-abc8-4676a8bdfc7b>, <urn:uuid:b1edd00b-f0dc-4241-81d5-54c4c5d2b572>)  # flowers, plants
+  )
+} group by ?person order by desc(?count)

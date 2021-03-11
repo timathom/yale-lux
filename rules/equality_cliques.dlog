@@ -1,0 +1,20 @@
+[?x, lux:equivalent, ?x] :- [?x, lux:equivalent, ?y] .
+[?y, lux:equivalent, ?x] :- [?x, lux:equivalent, ?y] .
+[?x, lux:equivalent, ?z] :- [?x, lux:equivalent, ?y], [?y, lux:equivalent, ?z] .
+
+[?x, lux:comesBefore, ?y] :- [?x, lux:equivalent, ?y], FILTER (?x < ?y)  .
+
+[?y, rdf:type, lux:NotSmallestInClique] :- [?x, lux:comesBefore, ?y] .
+
+[?x, rdf:type, lux:SmallestInClique] :-
+  [?x, lux:comesBefore, ?y],
+  NOT [?x, rdf:type, lux:NotSmallestInClique] .
+
+[?z, rdf:type, lux:EquivalentAgents],
+[?z, lux:represents, ?x] :-
+  [?x, rdf:type, lux:SmallestInClique],
+  rdfox:SKOLEM("EquivalentAgents", ?x, ?z) .
+
+[?x, lux:represents, ?z] :-
+  [?x, lux:represents, ?y],
+  [?y, lux:comesBefore, ?z] .
